@@ -400,7 +400,7 @@ public class TransformerCoreDefault implements TransformerCore {
             TransformCache cache = getFrame(frame);
 
             if (!cache.isValid()) {
-                break;
+                throw new TransformerException("Invalid cache when looking up transform from frame [" + lookupFrameString(sourceId) + "] to frame [" + lookupFrameString(targetId) + "]");
             }
 
             int parent = f.gather(cache, time);
@@ -627,7 +627,7 @@ public class TransformerCoreDefault implements TransformerCore {
                 try {
                     future.set(lookupTransformNoLock(targetFrame, sourceFrame, time));
                 } catch (TransformerException ex) {
-                    LOGGER.error("Transformation from [" + sourceFrame + "] to [" + targetFrame + "] failed even though can transform returned true", ex);
+                    LOGGER.warn("Transformation from [" + sourceFrame + "] to [" + targetFrame + "] failed!" + ex.getMessage());
                 }
             }
             requests.add(new TransformRequest(targetFrame, sourceFrame, time, future));
